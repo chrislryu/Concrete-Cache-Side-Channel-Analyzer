@@ -38,3 +38,4 @@ binaries/openssl/CMakeCache.txt
 binaries/openssl/Makefile
 __pycache__
 data/*
+.vscode
