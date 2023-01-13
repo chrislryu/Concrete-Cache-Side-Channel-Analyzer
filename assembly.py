@@ -19,16 +19,20 @@ class assembly:
                 self.sectionDict[m.name] = m
             elif "Disassembly of section" in item:
                 section = item[23:][:-1]
+            
                 
     def get(self, method):
         return self.sectionDict[method]
+
+
 
 class method:
     def __init__(self, methodString, section = None, offset = 0):
         self.section = section
         self.offset = offset
         self.instDict = dict()
-        self.retList = list()
+        self.retList = set()
+        self.first = None
         self.__parse(methodString)
     
     def __parse(self, methodString):
@@ -42,18 +46,24 @@ class method:
         for item in body:
             srtAdrStr, hexStr, *asmStr = [re.sub(r' {2,}', '',  s) for s in re.split(r'\t+', item)]
             asmStr = asmStr or None
-            adrStr = self.__convert(self.__replace(srtAdrStr))
-            self.instDict[adrStr] = (hexStr, asmStr)
+            adrInt = self.__convert(self.__replace(srtAdrStr))
+            self.instDict[adrInt] = (hexStr, asmStr)
             
             if asmStr:
                 if 'retq' in asmStr:
-                    self.retList.append(adrStr)
+                    self.retList.add(adrInt)
+                    
+            if self.first is None:
+                self.first = adrInt
             
     def __replace(self, srtAdrStr):
-        return self.start[:-len(srtAdrStr)] + srtAdrStr
+        return int(self.start[:-len(srtAdrStr)] + srtAdrStr.replace(':', ''), 16)
     
     def __convert(self, adrStr):
         return adrStr
     
     def getRet(self):
         return self.retList
+    
+    def getFirst(self):
+        return self.first

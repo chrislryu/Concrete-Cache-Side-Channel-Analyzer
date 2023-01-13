@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from logStorage import logStorage
 from logExtractor import logExtractor
 from logParser import logParser
@@ -23,14 +25,15 @@ class wrapper:
     
     def __init__(self, args):
         self.args = args
-        if self.__createDataPath():
+        self.userSignal = False
+        
+        if not self.__createDataPath():
             asmb = self.__preAnalysis()
             self.logStorage = logStorage(self.args)
             self.logExtractor = logExtractor(self.logStorage, self.args)
             self.logParser = logParser(self.logStorage, self.args)
             self.logAnalyzer = logAnalyzer(self.logStorage, self.args, asmb)
             self.logCleaner = logCleaner(self.args)
-            self.userSignal = False
         else:
             self.__load()
             # TODO: create class instances with loaded data
@@ -58,6 +61,7 @@ class wrapper:
         
         return False
     
+    
     def __uuid(self):
         print(self.args.uuid[0])
     
@@ -68,8 +72,8 @@ class wrapper:
         
         
     def __preAnalysis(self):
-        self.__objdump()
-        self.__assembly()
+        #self.__objdump()
+        return self.__assembly()
         
         
     def __objdump(self):
@@ -92,14 +96,13 @@ class wrapper:
         signal.signal(signal.SIGUSR1, userSignalHandler)
         
         while not self.userSignal:
-            results = self.logExtractor.run()
-            self.logParser.run(results)
-            self.logAnalyzer.run(results)
+            #results = self.logExtractor.run()
+            #self.logParser.run(results)
+            self.logAnalyzer.run([0])
             #self.logCleaner.run(results)
             sleep(0.01)
             
-            if len(results) > 0:
-                break
+            break
         
         self.__cleanUp()
 
@@ -110,7 +113,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--thread', nargs=1, type=int, default=[1], help='Number of threads to use')
     parser.add_argument('-b', '--binary', nargs=1, type=str, help='Relative path of binary to analyze', required=True)
     parser.add_argument('-u', '--uuid', nargs=1, type=str, default=['uuid'], help='UUID of previous run')
-    parser.add_argument('-m', '--method', nargs=1, type=str, help='Method to flag', required=True)
+    parser.add_argument('-f', '--functions', nargs=1, type=str, help='Function(s) to flag', required=True)
     args = parser.parse_args()
     
     wrapperInstance = wrapper(args)
