@@ -96,13 +96,15 @@ class wrapper:
         signal.signal(signal.SIGUSR1, userSignalHandler)
         
         while not self.userSignal:
+            results = [0]
             #results = self.logExtractor.run()
             #self.logParser.run(results)
-            self.logAnalyzer.run([0])
+            self.logAnalyzer.run(results)
             #self.logCleaner.run(results)
             sleep(0.01)
             
-            break
+            if len(results) > 0:
+                break
         
         self.__cleanUp()
 

@@ -25,12 +25,12 @@ class logExtractor:
     def __execute(self, input):
         gem5 = '../../../../gem5/build/X86/gem5.fast'
         gem5Script = '../../../../gem5/configs/example/se.py'
-        cpuType = '--cpu-type=X86O3CPU'
+        cpuType = '--cpu-type=X86TimingSimpleCPU'
         L1Cache = '--caches'
         L2Cache = '--l2cache'
-        elasticTrace = '--elastic-trace-en'
-        dataTraceFile = '--data-trace-file=deptrace.proto.gz'
-        instructionTraceFile = '--inst-trace-file=fetchtrace.proto.gz'
+        #elasticTrace = '--elastic-trace-en'
+        #dataTraceFile = '--data-trace-file=deptrace.proto.gz'
+        #instructionTraceFile = '--inst-trace-file=fetchtrace.proto.gz'
         memoryType = '--mem-type=SimpleMemory'
         binary = '--cmd=../../../../' + self.binary
         index = self.__createFolder()
@@ -42,7 +42,8 @@ class logExtractor:
         stdout = open(os.path.join(self.__joinPath__(index), 'stdout'), 'w')
         stderr = open(os.path.join(self.__joinPath__(index), 'stderr'), 'w')
         
-        cmd = [gem5, gem5Script, cpuType, L1Cache, L2Cache, elasticTrace, dataTraceFile, instructionTraceFile, memoryType, binary]
+        #cmd = [gem5, gem5Script, cpuType, L1Cache, L2Cache, elasticTrace, dataTraceFile, instructionTraceFile, memoryType, binary]
+        cmd = [gem5, gem5Script, cpuType, L1Cache, L2Cache, memoryType, binary]
         process = subprocess.Popen(cmd, stdin=stdin, stdout=stdout, stderr=stderr, cwd='data/'+self.uuid+'/logs/'+str(index))
         self.processes.append((index, process, stdin, stdout, stderr))
         
