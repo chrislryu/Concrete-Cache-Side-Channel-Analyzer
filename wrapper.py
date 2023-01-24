@@ -27,7 +27,7 @@ class wrapper:
         self.args = args
         self.userSignal = False
         
-        if not self.__createDataPath():
+        if self.__createDataPath():
             asmb = self.__preAnalysis()
             self.logStorage = logStorage(self.args)
             self.logExtractor = logExtractor(self.logStorage, self.args)
@@ -72,7 +72,7 @@ class wrapper:
         
         
     def __preAnalysis(self):
-        #self.__objdump()
+        self.__objdump()
         return self.__assembly()
         
         
@@ -96,15 +96,11 @@ class wrapper:
         signal.signal(signal.SIGUSR1, userSignalHandler)
         
         while not self.userSignal:
-            results = [0]
-            #results = self.logExtractor.run()
-            #self.logParser.run(results)
+            results = self.logExtractor.run()
+            self.logParser.run(results)
             self.logAnalyzer.run(results)
-            #self.logCleaner.run(results)
+            self.logCleaner.run(results)
             sleep(0.01)
-            
-            if len(results) > 0:
-                break
         
         self.__cleanUp()
 
