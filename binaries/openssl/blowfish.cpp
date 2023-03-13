@@ -29,4 +29,6 @@ int main()
     BF_ecb_encrypt(in, out, key, BF_ENCRYPT);
 
     std::cout << "finished encryption" << std::endl;
+
+    std::cout << "result" << out << std::endl;
 }

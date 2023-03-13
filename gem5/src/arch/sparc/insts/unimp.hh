@@ -30,6 +30,7 @@
 #define __ARCH_SPARC_INSTS_UNIMP_HH__
 
 #include <memory>
+#include <inttypes.h>
 
 #include "arch/generic/debugfaults.hh"
 #include "arch/sparc/insts/static_inst.hh"
@@ -103,7 +104,7 @@ class WarnUnimplemented : public SparcStaticInst
     {
         if (!warned) {
             return std::make_shared<GenericISA::M5WarnFault>(
-                "instruction '%s' unimplemented\n", mnemonic);
+                "instruction '%s' unimplemented %" PRIu64 "\n", mnemonic, (traceData->getPCState()).instAddr());
             warned = true;
         }
         return NoFault;

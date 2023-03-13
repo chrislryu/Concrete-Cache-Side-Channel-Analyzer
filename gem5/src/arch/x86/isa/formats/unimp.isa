@@ -131,7 +131,7 @@ output exec {{
                                Trace::InstRecord *traceData) const
     {
         if (!warned) {
-            warn("instruction '%s' unimplemented\n", mnemonic);
+            warn("instruction '%s' unimplemented %" PRIu64 "\n", mnemonic, (xc->pcState()).instAddr());
             warned = true;
         }
 

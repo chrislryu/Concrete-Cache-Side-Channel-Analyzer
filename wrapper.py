@@ -69,8 +69,8 @@ class wrapper:
     def __load(self):
         # TODO: load previous data
         pass
-        
-        
+    
+    
     def __preAnalysis(self):
         self.__objdump()
         return self.__assembly()
@@ -82,8 +82,8 @@ class wrapper:
         process = subprocess.Popen(cmd, stdout=stdout)
         process.wait()
         # TODO: check return code
-        
-        
+    
+    
     def __assembly(self):
         return assembly(self.path)
     
@@ -97,13 +97,12 @@ class wrapper:
         
         while not self.userSignal:
             results = self.logExtractor.run()
-            self.logParser.run(results)
-            self.logAnalyzer.run(results)
+            #self.logParser.run(results)
+            results = self.logAnalyzer.run(results)
             self.logCleaner.run(results)
             sleep(0.01)
         
         self.__cleanUp()
-
 
 
 if __name__ == "__main__":
@@ -112,6 +111,7 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--binary', nargs=1, type=str, help='Relative path of binary to analyze', required=True)
     parser.add_argument('-u', '--uuid', nargs=1, type=str, default=['uuid'], help='UUID of previous run')
     parser.add_argument('-f', '--functions', nargs=1, type=str, help='Function(s) to flag', required=True)
+    parser.add_argument('-l', '--length', nargs=1, type=int, help='Length of input', required=True)
     args = parser.parse_args()
     
     wrapperInstance = wrapper(args)
